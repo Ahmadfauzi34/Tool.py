@@ -1,0 +1,67 @@
+{
+  "schema_version": "4.1.0-memory",
+  "created_at": "2026-09-04T15:30:19.103740Z",
+  "updated_at": "2026-09-04T15:30:19.104650Z",
+  "scope": {
+    "scope_id": "project-bc810e30f53e1853",
+    "scope_kind": "project_path",
+    "scope_name": "project"
+  },
+  "memories": [
+    {
+      "id": "mem-z",
+      "content": "Something unrelated",
+      "tags": [
+        "tag1"
+      ],
+      "context": {
+        "file": "src/z.ts"
+      }
+    },
+    {
+      "id": "mem-b",
+      "content": "Something in hop 1",
+      "tags": [
+        "tag1"
+      ],
+      "context": {
+        "file": "src/b.ts"
+      }
+    },
+    {
+      "id": "mem-a",
+      "content": "Something direct",
+      "tags": [
+        "tag1"
+      ],
+      "context": {
+        "file": "src/a.ts"
+      }
+    }
+  ],
+  "associations": [],
+  "events": [],
+  "provenance_retention": {
+    "schema_version": "bounded-observation-provenance-v1",
+    "observation_event_limit": 128,
+    "archived_namespace_limit": 256,
+    "coalesced_batch_occurrences": 0,
+    "archived_event_records": 0,
+    "archived_batch_occurrences": 0,
+    "archived_namespace_overflow_occurrences": 0,
+    "archived_by_namespace": {},
+    "archived_lifecycle_totals": {
+      "observed": 0,
+      "stored": 0,
+      "reused": 0,
+      "revised": 0,
+      "resolved": 0,
+      "orphaned": 0,
+      "stale": 0
+    },
+    "checkpoint_digest": null,
+    "digest_algorithm": "sha256-chain-v1",
+    "counts_preserved": true,
+    "archived_detail_recoverable": false
+  }
+}

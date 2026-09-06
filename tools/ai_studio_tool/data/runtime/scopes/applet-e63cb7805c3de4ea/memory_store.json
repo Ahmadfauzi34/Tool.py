@@ -1,0 +1,131 @@
+{
+  "schema_version": "4.1.0-memory",
+  "created_at": "2026-09-05T17:44:14.579931Z",
+  "updated_at": "2026-09-05T17:44:33.033371Z",
+  "scope": {
+    "scope_id": "applet-e63cb7805c3de4ea",
+    "scope_kind": "project_path",
+    "scope_name": "applet"
+  },
+  "memories": [
+    {
+      "id": "sem_cf200b01",
+      "type": "semantic",
+      "content": "Premis A",
+      "source": "manual",
+      "timestamp": "2026-09-05T17:44:14.579319Z",
+      "importance": 0.5,
+      "access_count": 0,
+      "last_accessed": "2026-09-05T17:44:14.579319Z",
+      "tags": [
+        "test_loop"
+      ],
+      "context": {},
+      "consolidated_into": null
+    },
+    {
+      "id": "sem_6966f6a0",
+      "type": "semantic",
+      "content": "Premis A",
+      "source": "manual",
+      "timestamp": "2026-09-05T17:44:22.899255Z",
+      "importance": 0.5,
+      "access_count": 0,
+      "last_accessed": "2026-09-05T17:44:22.899255Z",
+      "tags": [
+        "test_loop"
+      ],
+      "context": {},
+      "consolidated_into": null
+    },
+    {
+      "id": "sem_2bc63ecb",
+      "type": "semantic",
+      "content": "Premis A",
+      "source": "manual",
+      "timestamp": "2026-09-05T17:44:32.611197Z",
+      "importance": 0.5,
+      "access_count": 0,
+      "last_accessed": "2026-09-05T17:44:32.611197Z",
+      "tags": [
+        "test_loop"
+      ],
+      "context": {},
+      "consolidated_into": null
+    },
+    {
+      "id": "sem_8de1d995",
+      "type": "semantic",
+      "content": "Konklusi B (dari A)",
+      "source": "manual",
+      "timestamp": "2026-09-05T17:44:32.716752Z",
+      "importance": 0.5,
+      "access_count": 0,
+      "last_accessed": "2026-09-05T17:44:32.716752Z",
+      "tags": [
+        "test_loop"
+      ],
+      "context": {},
+      "consolidated_into": null
+    },
+    {
+      "id": "sem_bfaf90ce",
+      "type": "semantic",
+      "content": "Konklusi C (dari B)",
+      "source": "manual",
+      "timestamp": "2026-09-05T17:44:32.821470Z",
+      "importance": 0.5,
+      "access_count": 0,
+      "last_accessed": "2026-09-05T17:44:32.821470Z",
+      "tags": [
+        "test_loop"
+      ],
+      "context": {},
+      "consolidated_into": null
+    }
+  ],
+  "associations": [
+    {
+      "id": "assoc_7c13456e",
+      "from": "sem_2bc63ecb",
+      "to": "sem_8de1d995",
+      "type": "inferential",
+      "strength": 0.5,
+      "created_at": "2026-09-05T17:44:32.925920Z",
+      "metadata": {}
+    },
+    {
+      "id": "assoc_ac71350f",
+      "from": "sem_8de1d995",
+      "to": "sem_bfaf90ce",
+      "type": "inferential",
+      "strength": 0.5,
+      "created_at": "2026-09-05T17:44:33.032243Z",
+      "metadata": {}
+    }
+  ],
+  "events": [],
+  "provenance_retention": {
+    "schema_version": "bounded-observation-provenance-v1",
+    "observation_event_limit": 128,
+    "archived_namespace_limit": 256,
+    "coalesced_batch_occurrences": 0,
+    "archived_event_records": 0,
+    "archived_batch_occurrences": 0,
+    "archived_namespace_overflow_occurrences": 0,
+    "archived_by_namespace": {},
+    "archived_lifecycle_totals": {
+      "observed": 0,
+      "stored": 0,
+      "reused": 0,
+      "revised": 0,
+      "resolved": 0,
+      "orphaned": 0,
+      "stale": 0
+    },
+    "checkpoint_digest": null,
+    "digest_algorithm": "sha256-chain-v1",
+    "counts_preserved": true,
+    "archived_detail_recoverable": false
+  }
+}

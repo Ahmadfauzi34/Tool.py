@@ -1,0 +1,793 @@
+{
+  "schema_version": "3.0.0-kernel",
+  "scan_root": "src",
+  "scan_timestamp": "2026-09-05T20:33:20.522376Z",
+  "vertices": [
+    "src/app/app.config.server.ts",
+    "src/app/app.config.ts",
+    "src/app/app.routes.server.ts",
+    "src/app/app.routes.ts",
+    "src/app/app.spec.ts",
+    "src/app/app.ts",
+    "src/main.server.ts",
+    "src/main.ts",
+    "src/models/abandoned-schema.ts",
+    "src/models/admin.model.ts",
+    "src/models/user.model.ts",
+    "src/server.ts",
+    "src/services/cache.service.ts",
+    "src/services/data.processor.ts",
+    "src/services/user.service.ts",
+    "src/utils/a.ts",
+    "src/utils/b.ts",
+    "src/utils/c.ts",
+    "src/utils/d.ts",
+    "src/utils/legacy-crypt.ts",
+    "src/utils/spaghetti-hub.ts"
+  ],
+  "edges": [
+    [
+      "src/app/app.config.server.ts",
+      "src/app/app.config.ts"
+    ],
+    [
+      "src/app/app.config.server.ts",
+      "src/app/app.routes.server.ts"
+    ],
+    [
+      "src/app/app.config.ts",
+      "src/app/app.routes.ts"
+    ],
+    [
+      "src/app/app.spec.ts",
+      "src/app/app.ts"
+    ],
+    [
+      "src/main.server.ts",
+      "src/app/app.config.server.ts"
+    ],
+    [
+      "src/main.server.ts",
+      "src/app/app.ts"
+    ],
+    [
+      "src/main.ts",
+      "src/app/app.config.ts"
+    ],
+    [
+      "src/main.ts",
+      "src/app/app.ts"
+    ],
+    [
+      "src/models/user.model.ts",
+      "src/services/user.service.ts"
+    ],
+    [
+      "src/services/cache.service.ts",
+      "src/services/data.processor.ts"
+    ],
+    [
+      "src/services/data.processor.ts",
+      "src/services/user.service.ts"
+    ],
+    [
+      "src/services/user.service.ts",
+      "src/models/user.model.ts"
+    ],
+    [
+      "src/services/user.service.ts",
+      "src/services/cache.service.ts"
+    ],
+    [
+      "src/utils/a.ts",
+      "src/utils/b.ts"
+    ],
+    [
+      "src/utils/a.ts",
+      "src/utils/c.ts"
+    ],
+    [
+      "src/utils/b.ts",
+      "src/utils/d.ts"
+    ],
+    [
+      "src/utils/c.ts",
+      "src/utils/d.ts"
+    ],
+    [
+      "src/utils/d.ts",
+      "src/utils/a.ts"
+    ],
+    [
+      "src/utils/spaghetti-hub.ts",
+      "src/models/admin.model.ts"
+    ],
+    [
+      "src/utils/spaghetti-hub.ts",
+      "src/services/data.processor.ts"
+    ],
+    [
+      "src/utils/spaghetti-hub.ts",
+      "src/services/user.service.ts"
+    ],
+    [
+      "src/utils/spaghetti-hub.ts",
+      "src/utils/a.ts"
+    ],
+    [
+      "src/utils/spaghetti-hub.ts",
+      "src/utils/b.ts"
+    ]
+  ],
+  "edge_natures": {
+    "src/app/app.config.server.ts -> src/app/app.config.ts": "runtime",
+    "src/app/app.config.server.ts -> src/app/app.routes.server.ts": "runtime",
+    "src/app/app.config.ts -> src/app/app.routes.ts": "runtime",
+    "src/app/app.spec.ts -> src/app/app.ts": "runtime",
+    "src/main.server.ts -> src/app/app.config.server.ts": "runtime",
+    "src/main.server.ts -> src/app/app.ts": "runtime",
+    "src/main.ts -> src/app/app.config.ts": "runtime",
+    "src/main.ts -> src/app/app.ts": "runtime",
+    "src/models/user.model.ts -> src/services/user.service.ts": "runtime",
+    "src/services/cache.service.ts -> src/services/data.processor.ts": "runtime",
+    "src/services/data.processor.ts -> src/services/user.service.ts": "runtime",
+    "src/services/user.service.ts -> src/models/user.model.ts": "runtime",
+    "src/services/user.service.ts -> src/services/cache.service.ts": "runtime",
+    "src/utils/a.ts -> src/utils/b.ts": "runtime",
+    "src/utils/a.ts -> src/utils/c.ts": "runtime",
+    "src/utils/b.ts -> src/utils/d.ts": "runtime",
+    "src/utils/c.ts -> src/utils/d.ts": "runtime",
+    "src/utils/d.ts -> src/utils/a.ts": "runtime",
+    "src/utils/spaghetti-hub.ts -> src/models/admin.model.ts": "runtime",
+    "src/utils/spaghetti-hub.ts -> src/services/data.processor.ts": "runtime",
+    "src/utils/spaghetti-hub.ts -> src/services/user.service.ts": "runtime",
+    "src/utils/spaghetti-hub.ts -> src/utils/a.ts": "runtime",
+    "src/utils/spaghetti-hub.ts -> src/utils/b.ts": "runtime"
+  },
+  "edge_details": [
+    {
+      "source": "src/app/app.config.server.ts",
+      "target": "src/app/app.config.ts",
+      "import_nature": "runtime",
+      "semantic_usages": []
+    },
+    {
+      "source": "src/app/app.config.server.ts",
+      "target": "src/app/app.routes.server.ts",
+      "import_nature": "runtime",
+      "semantic_usages": []
+    },
+    {
+      "source": "src/app/app.config.ts",
+      "target": "src/app/app.routes.ts",
+      "import_nature": "runtime",
+      "semantic_usages": []
+    },
+    {
+      "source": "src/app/app.spec.ts",
+      "target": "src/app/app.ts",
+      "import_nature": "runtime",
+      "semantic_usages": []
+    },
+    {
+      "source": "src/main.server.ts",
+      "target": "src/app/app.config.server.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "namespace_access(config)"
+      ]
+    },
+    {
+      "source": "src/main.server.ts",
+      "target": "src/app/app.ts",
+      "import_nature": "runtime",
+      "semantic_usages": []
+    },
+    {
+      "source": "src/main.ts",
+      "target": "src/app/app.config.ts",
+      "import_nature": "runtime",
+      "semantic_usages": []
+    },
+    {
+      "source": "src/main.ts",
+      "target": "src/app/app.ts",
+      "import_nature": "runtime",
+      "semantic_usages": []
+    },
+    {
+      "source": "src/models/user.model.ts",
+      "target": "src/services/user.service.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "typed(UserService)"
+      ]
+    },
+    {
+      "source": "src/services/cache.service.ts",
+      "target": "src/services/data.processor.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "instantiated(DataProcessor)"
+      ]
+    },
+    {
+      "source": "src/services/data.processor.ts",
+      "target": "src/services/user.service.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "typed(UserService)"
+      ]
+    },
+    {
+      "source": "src/services/user.service.ts",
+      "target": "src/models/user.model.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "typed(UserModel)"
+      ]
+    },
+    {
+      "source": "src/services/user.service.ts",
+      "target": "src/services/cache.service.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "instantiated(CacheService)"
+      ]
+    },
+    {
+      "source": "src/utils/a.ts",
+      "target": "src/utils/b.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "called(utilB)"
+      ]
+    },
+    {
+      "source": "src/utils/a.ts",
+      "target": "src/utils/c.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "called(utilC)"
+      ]
+    },
+    {
+      "source": "src/utils/b.ts",
+      "target": "src/utils/d.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "called(utilD)"
+      ]
+    },
+    {
+      "source": "src/utils/c.ts",
+      "target": "src/utils/d.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "called(utilD)"
+      ]
+    },
+    {
+      "source": "src/utils/d.ts",
+      "target": "src/utils/a.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "called(utilA)"
+      ]
+    },
+    {
+      "source": "src/utils/spaghetti-hub.ts",
+      "target": "src/models/admin.model.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "typed(AdminModel)"
+      ]
+    },
+    {
+      "source": "src/utils/spaghetti-hub.ts",
+      "target": "src/services/data.processor.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "instantiated(DataProcessor)"
+      ]
+    },
+    {
+      "source": "src/utils/spaghetti-hub.ts",
+      "target": "src/services/user.service.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "instantiated(UserService)"
+      ]
+    },
+    {
+      "source": "src/utils/spaghetti-hub.ts",
+      "target": "src/utils/a.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "called(utilA)"
+      ]
+    },
+    {
+      "source": "src/utils/spaghetti-hub.ts",
+      "target": "src/utils/b.ts",
+      "import_nature": "runtime",
+      "semantic_usages": [
+        "called(utilB)"
+      ]
+    }
+  ],
+  "node_metadata": {
+    "src/app/app.config.server.ts": {
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 2
+    },
+    "src/app/app.config.ts": {
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "src/app/app.routes.server.ts": {
+      "type": "Module",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "src/app/app.routes.ts": {
+      "type": "Module",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "src/app/app.spec.ts": {
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": true,
+      "fan_in": 0,
+      "fan_out": 1
+    },
+    "src/app/app.ts": {
+      "type": "Component",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 3,
+      "fan_out": 0
+    },
+    "src/main.server.ts": {
+      "type": "Other",
+      "is_entrypoint": true,
+      "entrypoint_kind": "ssr_bootstrap",
+      "entrypoint_confidence": 0.95,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 2
+    },
+    "src/main.ts": {
+      "type": "Other",
+      "is_entrypoint": true,
+      "entrypoint_kind": "browser_bootstrap",
+      "entrypoint_confidence": 0.95,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 2
+    },
+    "src/models/abandoned-schema.ts": {
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "src/models/admin.model.ts": {
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 0
+    },
+    "src/models/user.model.ts": {
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "src/server.ts": {
+      "type": "Other",
+      "is_entrypoint": true,
+      "entrypoint_kind": "server_http",
+      "entrypoint_confidence": 0.9,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "src/services/cache.service.ts": {
+      "type": "Service",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "src/services/data.processor.ts": {
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "src/services/user.service.ts": {
+      "type": "Service",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 3,
+      "fan_out": 2
+    },
+    "src/utils/a.ts": {
+      "type": "Helper",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 2,
+      "fan_out": 2
+    },
+    "src/utils/b.ts": {
+      "type": "Helper",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "src/utils/c.ts": {
+      "type": "Helper",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 1
+    },
+    "src/utils/d.ts": {
+      "type": "Helper",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 2,
+      "fan_out": 1
+    },
+    "src/utils/legacy-crypt.ts": {
+      "type": "Helper",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 0
+    },
+    "src/utils/spaghetti-hub.ts": {
+      "type": "Helper",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 5
+    }
+  },
+  "resolved_imports": {
+    "src/app/app.config.server.ts": [
+      "src/app/app.config.ts",
+      "src/app/app.routes.server.ts"
+    ],
+    "src/app/app.config.ts": [
+      "src/app/app.routes.ts"
+    ],
+    "src/app/app.routes.server.ts": [],
+    "src/app/app.routes.ts": [],
+    "src/app/app.spec.ts": [
+      "src/app/app.ts"
+    ],
+    "src/app/app.ts": [],
+    "src/main.server.ts": [
+      "src/app/app.ts",
+      "src/app/app.config.server.ts"
+    ],
+    "src/main.ts": [
+      "src/app/app.ts",
+      "src/app/app.config.ts"
+    ],
+    "src/models/abandoned-schema.ts": [],
+    "src/models/admin.model.ts": [],
+    "src/models/user.model.ts": [
+      "src/services/user.service.ts"
+    ],
+    "src/server.ts": [],
+    "src/services/cache.service.ts": [
+      "src/services/data.processor.ts"
+    ],
+    "src/services/data.processor.ts": [
+      "src/services/user.service.ts"
+    ],
+    "src/services/user.service.ts": [
+      "src/models/user.model.ts",
+      "src/services/cache.service.ts"
+    ],
+    "src/utils/a.ts": [
+      "src/utils/b.ts",
+      "src/utils/c.ts"
+    ],
+    "src/utils/b.ts": [
+      "src/utils/d.ts"
+    ],
+    "src/utils/c.ts": [
+      "src/utils/d.ts"
+    ],
+    "src/utils/d.ts": [
+      "src/utils/a.ts"
+    ],
+    "src/utils/legacy-crypt.ts": [],
+    "src/utils/spaghetti-hub.ts": [
+      "src/services/user.service.ts",
+      "src/services/data.processor.ts",
+      "src/models/admin.model.ts",
+      "src/utils/a.ts",
+      "src/utils/b.ts"
+    ]
+  },
+  "unresolved_imports": [],
+  "external_imports": [
+    {
+      "importer": "src/app/app.config.server.ts",
+      "raw_import": "@angular/core"
+    },
+    {
+      "importer": "src/app/app.config.server.ts",
+      "raw_import": "@angular/ssr"
+    },
+    {
+      "importer": "src/app/app.config.ts",
+      "raw_import": "@angular/core"
+    },
+    {
+      "importer": "src/app/app.config.ts",
+      "raw_import": "@angular/router"
+    },
+    {
+      "importer": "src/app/app.routes.server.ts",
+      "raw_import": "@angular/ssr"
+    },
+    {
+      "importer": "src/app/app.routes.ts",
+      "raw_import": "@angular/router"
+    },
+    {
+      "importer": "src/app/app.spec.ts",
+      "raw_import": "@angular/core/testing"
+    },
+    {
+      "importer": "src/app/app.ts",
+      "raw_import": "@angular/core"
+    },
+    {
+      "importer": "src/app/app.ts",
+      "raw_import": "@angular/common"
+    },
+    {
+      "importer": "src/app/app.ts",
+      "raw_import": "@angular/forms"
+    },
+    {
+      "importer": "src/app/app.ts",
+      "raw_import": "@angular/material/icon"
+    },
+    {
+      "importer": "src/main.server.ts",
+      "raw_import": "@angular/platform-browser"
+    },
+    {
+      "importer": "src/main.ts",
+      "raw_import": "@angular/platform-browser"
+    },
+    {
+      "importer": "src/server.ts",
+      "raw_import": "@angular/ssr/node"
+    },
+    {
+      "importer": "src/server.ts",
+      "raw_import": "express"
+    },
+    {
+      "importer": "src/server.ts",
+      "raw_import": "node:path"
+    },
+    {
+      "importer": "src/server.ts",
+      "raw_import": "node:child_process"
+    },
+    {
+      "importer": "src/server.ts",
+      "raw_import": "node:util"
+    },
+    {
+      "importer": "src/server.ts",
+      "raw_import": "node:fs/promises"
+    }
+  ],
+  "boundaries": {
+    "src/app": {
+      "barrel": null,
+      "files": [
+        "src/app/app.config.server.ts",
+        "src/app/app.config.ts",
+        "src/app/app.routes.server.ts",
+        "src/app/app.routes.ts",
+        "src/app/app.spec.ts",
+        "src/app/app.ts"
+      ]
+    },
+    "src": {
+      "barrel": null,
+      "files": [
+        "src/main.server.ts",
+        "src/main.ts",
+        "src/server.ts"
+      ]
+    },
+    "src/models": {
+      "barrel": null,
+      "files": [
+        "src/models/abandoned-schema.ts",
+        "src/models/admin.model.ts",
+        "src/models/user.model.ts"
+      ]
+    },
+    "src/services": {
+      "barrel": null,
+      "files": [
+        "src/services/cache.service.ts",
+        "src/services/data.processor.ts",
+        "src/services/user.service.ts"
+      ]
+    },
+    "src/utils": {
+      "barrel": null,
+      "files": [
+        "src/utils/a.ts",
+        "src/utils/b.ts",
+        "src/utils/c.ts",
+        "src/utils/d.ts",
+        "src/utils/legacy-crypt.ts",
+        "src/utils/spaghetti-hub.ts"
+      ]
+    }
+  },
+  "file_to_boundary": {
+    "src/app/app.config.server.ts": "src/app",
+    "src/app/app.config.ts": "src/app",
+    "src/app/app.routes.server.ts": "src/app",
+    "src/app/app.routes.ts": "src/app",
+    "src/app/app.spec.ts": "src/app",
+    "src/app/app.ts": "src/app",
+    "src/main.server.ts": "src",
+    "src/main.ts": "src",
+    "src/models/abandoned-schema.ts": "src/models",
+    "src/models/admin.model.ts": "src/models",
+    "src/models/user.model.ts": "src/models",
+    "src/server.ts": "src",
+    "src/services/cache.service.ts": "src/services",
+    "src/services/data.processor.ts": "src/services",
+    "src/services/user.service.ts": "src/services",
+    "src/utils/a.ts": "src/utils",
+    "src/utils/b.ts": "src/utils",
+    "src/utils/c.ts": "src/utils",
+    "src/utils/d.ts": "src/utils",
+    "src/utils/legacy-crypt.ts": "src/utils",
+    "src/utils/spaghetti-hub.ts": "src/utils"
+  },
+  "type_shapes": {
+    "src/app/app.ts": {
+      "TopologyNode": [
+        "id",
+        "label",
+        "path"
+      ],
+      "TopologyEdge": [
+        "source",
+        "target"
+      ],
+      "Topology": [
+        "edges",
+        "nodes",
+        "save_error"
+      ],
+      "ImpactResult": [
+        "circular_references",
+        "downstream",
+        "target",
+        "upstream"
+      ],
+      "PythonInfo": [
+        "error",
+        "runtime",
+        "script",
+        "status",
+        "supported",
+        "version"
+      ]
+    },
+    "src/models/abandoned-schema.ts": {
+      "AbandonedSchema": [
+        "deprecatedToken",
+        "legacyId",
+        "unusedFlag"
+      ]
+    },
+    "src/models/admin.model.ts": {
+      "AdminModel": [
+        "createdAt",
+        "id",
+        "name"
+      ]
+    },
+    "src/models/user.model.ts": {
+      "UserModel": [
+        "activeServiceInstance",
+        "createdAt",
+        "id",
+        "name"
+      ]
+    },
+    "src/services/data.processor.ts": {
+      "ProcessConfig": [
+        "processedAt",
+        "temp"
+      ]
+    }
+  },
+  "summary": {
+    "total_files": 21,
+    "total_edges": 23,
+    "runtime_edge_count": 23,
+    "type_only_edge_count": 0,
+    "total_boundaries": 5,
+    "total_type_shapes": 9,
+    "total_unresolved": 0,
+    "total_external": 19,
+    "alias_rules_count": 0,
+    "entrypoint_count": 3,
+    "test_file_count": 1
+  }
+}

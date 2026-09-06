@@ -1,0 +1,6 @@
+{
+  "name": "Codebase Topology & Impact Analyzer",
+  "description": "Interactive developer dashboard and Python tool library for AI Studio workspace scanning, visual graph topology mapping, and change impact tracing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

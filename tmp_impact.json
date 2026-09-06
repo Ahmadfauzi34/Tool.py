@@ -1,0 +1,104 @@
+{
+  "schema_version": "3.0.0-kernel",
+  "mode": "impact",
+  "graph_cache": {
+    "mode": "auto",
+    "status": "partial",
+    "cache_key": "69ee8f4837d5dc11b26939c2",
+    "cache_path": "data/codebase/cache/shared_graph_69ee8f4837d5dc11b26939c2.json",
+    "files_discovered": 22,
+    "files_reused": 0,
+    "files_read": 22,
+    "files_added": 0,
+    "files_changed": 22,
+    "files_deleted": 0,
+    "read_failures": [],
+    "hit_ratio": 0.0,
+    "contains_source_content": true,
+    "stat_trust_boundary": "Unchanged means size, mtime_ns, and ctime_ns are identical. Filesystems that preserve all three values after a content mutation require --cache-mode refresh.",
+    "graph_content_signature": "sha256:afaac22b3aba2c66744cfe8332c78d3a34db6071a3a557548ca84fd6f57c2b43"
+  },
+  "target": "src/services/user.service.ts",
+  "exists": true,
+  "upstream": [
+    "src/models/user.model.ts",
+    "src/services/cache.service.ts",
+    "src/services/data.processor.ts"
+  ],
+  "downstream": [
+    "src/models/user.model.ts",
+    "src/services/cache.service.ts",
+    "src/services/data.processor.ts",
+    "src/utils/spaghetti-hub.ts"
+  ],
+  "direct_upstream": [
+    "src/models/user.model.ts",
+    "src/services/cache.service.ts"
+  ],
+  "direct_downstream": [
+    "src/models/user.model.ts",
+    "src/services/data.processor.ts",
+    "src/utils/spaghetti-hub.ts"
+  ],
+  "semantic_usages": [
+    "src/models/user.model.ts -> typed(UserService)",
+    "src/services/data.processor.ts -> typed(UserService)",
+    "src/utils/spaghetti-hub.ts -> instantiated(UserService)"
+  ],
+  "circular_references": [
+    "src/services/user.service.ts"
+  ],
+  "cycle_break_advisory": {
+    "total_cycles": 2,
+    "total_cuts_required": 2,
+    "all_cycles_resolvable": true,
+    "recommended_cuts": [
+      {
+        "source": "src/services/user.service.ts",
+        "target": "src/models/user.model.ts",
+        "cycles_eliminated": 1,
+        "strategy": "type_only_import",
+        "estimated_effort": "trivial",
+        "cut_cost": 10,
+        "rationale": "File 'src/services/user.service.ts' only references type definitions (UserModel) from 'src/models/user.model.ts'. Converting to 'import type' or isolated declarations eliminates runtime circularity.",
+        "actionable_steps": [
+          "Change import in 'src/services/user.service.ts' to: import type { UserModel } from 'src/models/user.model.ts'.",
+          "Ensure TypeScript compiler option 'isolatedDeclarations' or 'verbatimModuleSyntax' is satisfied."
+        ],
+        "symbols_involved": [
+          "UserModel"
+        ],
+        "suggested_leaf": "src/models/user.model.types.ts"
+      },
+      {
+        "source": "src/services/data.processor.ts",
+        "target": "src/services/user.service.ts",
+        "cycles_eliminated": 1,
+        "strategy": "architectural_inversion",
+        "estimated_effort": "low",
+        "cut_cost": 35,
+        "rationale": "Architectural layer violation: Other 'src/services/data.processor.ts' (layer 2) imports higher-level Service 'src/services/user.service.ts' (layer 3). Dependencies should flow downward.",
+        "actionable_steps": [
+          "Refactor 'src/services/data.processor.ts' to remove the direct upward dependency on 'src/services/user.service.ts'.",
+          "Extract shared data structures or callbacks so 'src/services/data.processor.ts' operates on primitives or interfaces.",
+          "Pass 'src/services/user.service.ts' or its methods to 'src/services/data.processor.ts' via dependency injection or function arguments."
+        ],
+        "symbols_involved": [
+          "UserService"
+        ],
+        "suggested_leaf": "src/services/user.shared.ts"
+      }
+    ]
+  },
+  "target_is_entrypoint": false,
+  "target_is_test": false,
+  "affected_entrypoints": [],
+  "target_fan_in": 3,
+  "target_fan_out": 2,
+  "change_risk_level": "medium",
+  "change_risk_reasons": [
+    "high_fan_in"
+  ],
+  "upstream_count": 3,
+  "downstream_count": 4
+}

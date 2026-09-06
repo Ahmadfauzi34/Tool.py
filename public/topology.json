@@ -1,0 +1,322 @@
+{
+  "schema_version": "1.5.2-multi-root",
+  "meta": {
+    "root": "src",
+    "roots": [
+      "src"
+    ],
+    "scan_mode": "single-root",
+    "ignore_dirs": [
+      ".Jules",
+      ".angular",
+      ".git",
+      ".next",
+      "coverage",
+      "dist",
+      "node_modules",
+      "out"
+    ],
+    "resolver_mode": "standard-library",
+    "unresolved_edge_policy": "exclude_from_main_graph",
+    "source_extensions": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx"
+    ],
+    "policy": {
+      "mode": "informational_only",
+      "blocking": false,
+      "provides_change_recommendations": false
+    }
+  },
+  "nodes": [
+    {
+      "id": "src/app/app.config.server.ts",
+      "path": "src/app/app.config.server.ts",
+      "label": "config",
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 2,
+      "direct_dependents_count": 1
+    },
+    {
+      "id": "src/app/app.config.ts",
+      "path": "src/app/app.config.ts",
+      "label": "appConfig",
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 2,
+      "fan_out": 1,
+      "direct_dependents_count": 2
+    },
+    {
+      "id": "src/app/app.routes.server.ts",
+      "path": "src/app/app.routes.server.ts",
+      "label": "serverRoutes",
+      "type": "Module",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 0,
+      "direct_dependents_count": 1
+    },
+    {
+      "id": "src/app/app.routes.ts",
+      "path": "src/app/app.routes.ts",
+      "label": "routes",
+      "type": "Module",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 1,
+      "fan_out": 0,
+      "direct_dependents_count": 1
+    },
+    {
+      "id": "src/app/app.spec.ts",
+      "path": "src/app/app.spec.ts",
+      "label": "App",
+      "type": "Other",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": true,
+      "fan_in": 0,
+      "fan_out": 1,
+      "direct_dependents_count": 0
+    },
+    {
+      "id": "src/app/app.ts",
+      "path": "src/app/app.ts",
+      "label": "App",
+      "type": "Component",
+      "is_entrypoint": false,
+      "entrypoint_kind": "none",
+      "entrypoint_confidence": 0.0,
+      "is_test": false,
+      "fan_in": 3,
+      "fan_out": 0,
+      "direct_dependents_count": 3
+    },
+    {
+      "id": "src/main.server.ts",
+      "path": "src/main.server.ts",
+      "label": "Main",
+      "type": "Other",
+      "is_entrypoint": true,
+      "entrypoint_kind": "ssr_bootstrap",
+      "entrypoint_confidence": 0.95,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 2,
+      "direct_dependents_count": 0
+    },
+    {
+      "id": "src/main.ts",
+      "path": "src/main.ts",
+      "label": "Main",
+      "type": "Other",
+      "is_entrypoint": true,
+      "entrypoint_kind": "browser_bootstrap",
+      "entrypoint_confidence": 0.95,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 2,
+      "direct_dependents_count": 0
+    },
+    {
+      "id": "src/server.ts",
+      "path": "src/server.ts",
+      "label": "reqHandler",
+      "type": "Other",
+      "is_entrypoint": true,
+      "entrypoint_kind": "server_http",
+      "entrypoint_confidence": 0.9,
+      "is_test": false,
+      "fan_in": 0,
+      "fan_out": 0,
+      "direct_dependents_count": 0
+    }
+  ],
+  "edges": [
+    {
+      "source": "src/app/app.config.server.ts",
+      "target": "src/app/app.config.ts",
+      "raw_import": "./app.config",
+      "status": "resolved_with_assumption",
+      "method": "extension_match",
+      "confidence": 0.95
+    },
+    {
+      "source": "src/app/app.config.server.ts",
+      "target": "src/app/app.routes.server.ts",
+      "raw_import": "./app.routes.server",
+      "status": "resolved_with_assumption",
+      "method": "extension_match",
+      "confidence": 0.95
+    },
+    {
+      "source": "src/app/app.config.ts",
+      "target": "src/app/app.routes.ts",
+      "raw_import": "./app.routes",
+      "status": "resolved_with_assumption",
+      "method": "extension_match",
+      "confidence": 0.95
+    },
+    {
+      "source": "src/app/app.spec.ts",
+      "target": "src/app/app.ts",
+      "raw_import": "./app",
+      "status": "resolved_with_assumption",
+      "method": "extension_match",
+      "confidence": 0.95
+    },
+    {
+      "source": "src/main.server.ts",
+      "target": "src/app/app.config.server.ts",
+      "raw_import": "./app/app.config.server",
+      "status": "resolved_with_assumption",
+      "method": "extension_match",
+      "confidence": 0.95
+    },
+    {
+      "source": "src/main.server.ts",
+      "target": "src/app/app.ts",
+      "raw_import": "./app/app",
+      "status": "resolved_with_assumption",
+      "method": "extension_match",
+      "confidence": 0.95
+    },
+    {
+      "source": "src/main.ts",
+      "target": "src/app/app.config.ts",
+      "raw_import": "./app/app.config",
+      "status": "resolved_with_assumption",
+      "method": "extension_match",
+      "confidence": 0.95
+    },
+    {
+      "source": "src/main.ts",
+      "target": "src/app/app.ts",
+      "raw_import": "./app/app",
+      "status": "resolved_with_assumption",
+      "method": "extension_match",
+      "confidence": 0.95
+    }
+  ],
+  "summary": {
+    "total_files_scanned": 9,
+    "total_nodes": 9,
+    "total_edges": 8,
+    "resolved_edge_count": 8,
+    "unresolved_import_count": 0,
+    "external_import_count": 20,
+    "skipped_file_count": 0,
+    "ambiguous_resolution_count": 0,
+    "entrypoint_count": 3,
+    "max_fan_in": 3,
+    "max_fan_out": 2,
+    "test_file_count": 1,
+    "unreferenced_file_count": 0
+  },
+  "diagnostics": {
+    "unresolved_imports": [],
+    "external_imports": [
+      {
+        "importer": "src/app/app.config.server.ts",
+        "raw_import": "@angular/core"
+      },
+      {
+        "importer": "src/app/app.config.server.ts",
+        "raw_import": "@angular/ssr"
+      },
+      {
+        "importer": "src/app/app.config.ts",
+        "raw_import": "@angular/core"
+      },
+      {
+        "importer": "src/app/app.config.ts",
+        "raw_import": "@angular/router"
+      },
+      {
+        "importer": "src/app/app.routes.server.ts",
+        "raw_import": "@angular/ssr"
+      },
+      {
+        "importer": "src/app/app.routes.ts",
+        "raw_import": "@angular/router"
+      },
+      {
+        "importer": "src/app/app.spec.ts",
+        "raw_import": "@angular/core/testing"
+      },
+      {
+        "importer": "src/app/app.ts",
+        "raw_import": "@angular/common"
+      },
+      {
+        "importer": "src/app/app.ts",
+        "raw_import": "@angular/core"
+      },
+      {
+        "importer": "src/app/app.ts",
+        "raw_import": "@angular/forms"
+      },
+      {
+        "importer": "src/app/app.ts",
+        "raw_import": "@angular/material/icon"
+      },
+      {
+        "importer": "src/main.server.ts",
+        "raw_import": "@angular/platform-browser"
+      },
+      {
+        "importer": "src/main.ts",
+        "raw_import": "@angular/platform-browser"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "@angular/ssr/node"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "express"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:child_process"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:fs"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:fs/promises"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:path"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:util"
+      }
+    ],
+    "ambiguous_resolutions": [],
+    "skipped_files": [],
+    "parse_warnings": [],
+    "unreferenced_files": []
+  }
+}

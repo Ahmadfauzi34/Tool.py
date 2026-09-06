@@ -1,0 +1,585 @@
+{
+  "schema_version": "3.0.0-kernel",
+  "mode": "analyze",
+  "scan_root": "src",
+  "timestamp": "2026-08-07T16:53:56.295697Z",
+  "shared_graph": {
+    "schema_version": "3.0.0-kernel",
+    "scan_root": "src",
+    "scan_timestamp": "2026-08-07T16:53:56.295637Z",
+    "vertices": [
+      "src/app/app.config.server.ts",
+      "src/app/app.config.ts",
+      "src/app/app.routes.server.ts",
+      "src/app/app.routes.ts",
+      "src/app/app.spec.ts",
+      "src/app/app.ts",
+      "src/main.server.ts",
+      "src/main.ts",
+      "src/models/admin.model.ts",
+      "src/models/user.model.ts",
+      "src/server.ts",
+      "src/services/cache.service.ts",
+      "src/services/data.processor.ts",
+      "src/services/user.service.ts",
+      "src/utils/a.ts",
+      "src/utils/b.ts",
+      "src/utils/c.ts",
+      "src/utils/d.ts"
+    ],
+    "edges": [
+      [
+        "src/app/app.config.server.ts",
+        "src/app/app.config.ts"
+      ],
+      [
+        "src/app/app.config.server.ts",
+        "src/app/app.routes.server.ts"
+      ],
+      [
+        "src/app/app.config.ts",
+        "src/app/app.routes.ts"
+      ],
+      [
+        "src/app/app.spec.ts",
+        "src/app/app.ts"
+      ],
+      [
+        "src/main.server.ts",
+        "src/app/app.config.server.ts"
+      ],
+      [
+        "src/main.server.ts",
+        "src/app/app.ts"
+      ],
+      [
+        "src/main.ts",
+        "src/app/app.config.ts"
+      ],
+      [
+        "src/main.ts",
+        "src/app/app.ts"
+      ],
+      [
+        "src/utils/a.ts",
+        "src/utils/b.ts"
+      ],
+      [
+        "src/utils/a.ts",
+        "src/utils/c.ts"
+      ],
+      [
+        "src/utils/b.ts",
+        "src/utils/d.ts"
+      ],
+      [
+        "src/utils/c.ts",
+        "src/utils/d.ts"
+      ]
+    ],
+    "node_metadata": {
+      "src/main.server.ts": {
+        "type": "Other",
+        "is_entrypoint": true,
+        "entrypoint_kind": "ssr_bootstrap",
+        "entrypoint_confidence": 0.95,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 2
+      },
+      "src/main.ts": {
+        "type": "Other",
+        "is_entrypoint": true,
+        "entrypoint_kind": "browser_bootstrap",
+        "entrypoint_confidence": 0.95,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 2
+      },
+      "src/server.ts": {
+        "type": "Other",
+        "is_entrypoint": true,
+        "entrypoint_kind": "server_http",
+        "entrypoint_confidence": 0.9,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 0
+      },
+      "src/app/app.config.server.ts": {
+        "type": "Other",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 1,
+        "fan_out": 2
+      },
+      "src/app/app.config.ts": {
+        "type": "Other",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 2,
+        "fan_out": 1
+      },
+      "src/app/app.routes.server.ts": {
+        "type": "Module",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 1,
+        "fan_out": 0
+      },
+      "src/app/app.routes.ts": {
+        "type": "Module",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 1,
+        "fan_out": 0
+      },
+      "src/app/app.spec.ts": {
+        "type": "Other",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": true,
+        "fan_in": 0,
+        "fan_out": 1
+      },
+      "src/app/app.ts": {
+        "type": "Component",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 3,
+        "fan_out": 0
+      },
+      "src/models/admin.model.ts": {
+        "type": "Other",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 0
+      },
+      "src/models/user.model.ts": {
+        "type": "Other",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 0
+      },
+      "src/services/cache.service.ts": {
+        "type": "Service",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 0
+      },
+      "src/services/data.processor.ts": {
+        "type": "Other",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 0
+      },
+      "src/services/user.service.ts": {
+        "type": "Service",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 0
+      },
+      "src/utils/a.ts": {
+        "type": "Helper",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 0,
+        "fan_out": 2
+      },
+      "src/utils/b.ts": {
+        "type": "Helper",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 1,
+        "fan_out": 1
+      },
+      "src/utils/c.ts": {
+        "type": "Helper",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 1,
+        "fan_out": 1
+      },
+      "src/utils/d.ts": {
+        "type": "Helper",
+        "is_entrypoint": false,
+        "entrypoint_kind": "none",
+        "entrypoint_confidence": 0.0,
+        "is_test": false,
+        "fan_in": 2,
+        "fan_out": 0
+      }
+    },
+    "resolved_imports": {
+      "src/main.server.ts": [
+        "src/app/app.ts",
+        "src/app/app.config.server.ts"
+      ],
+      "src/main.ts": [
+        "src/app/app.ts",
+        "src/app/app.config.ts"
+      ],
+      "src/server.ts": [],
+      "src/app/app.config.server.ts": [
+        "src/app/app.config.ts",
+        "src/app/app.routes.server.ts"
+      ],
+      "src/app/app.config.ts": [
+        "src/app/app.routes.ts"
+      ],
+      "src/app/app.routes.server.ts": [],
+      "src/app/app.routes.ts": [],
+      "src/app/app.spec.ts": [
+        "src/app/app.ts"
+      ],
+      "src/app/app.ts": [],
+      "src/models/admin.model.ts": [],
+      "src/models/user.model.ts": [],
+      "src/services/cache.service.ts": [],
+      "src/services/data.processor.ts": [],
+      "src/services/user.service.ts": [],
+      "src/utils/a.ts": [
+        "src/utils/b.ts",
+        "src/utils/c.ts"
+      ],
+      "src/utils/b.ts": [
+        "src/utils/d.ts"
+      ],
+      "src/utils/c.ts": [
+        "src/utils/d.ts"
+      ],
+      "src/utils/d.ts": []
+    },
+    "unresolved_imports": [],
+    "external_imports": [
+      {
+        "importer": "src/main.server.ts",
+        "raw_import": "@angular/platform-browser"
+      },
+      {
+        "importer": "src/main.ts",
+        "raw_import": "@angular/platform-browser"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "@angular/ssr/node"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "express"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:path"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:child_process"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:util"
+      },
+      {
+        "importer": "src/server.ts",
+        "raw_import": "node:fs/promises"
+      },
+      {
+        "importer": "src/app/app.config.server.ts",
+        "raw_import": "@angular/core"
+      },
+      {
+        "importer": "src/app/app.config.server.ts",
+        "raw_import": "@angular/ssr"
+      },
+      {
+        "importer": "src/app/app.config.ts",
+        "raw_import": "@angular/core"
+      },
+      {
+        "importer": "src/app/app.config.ts",
+        "raw_import": "@angular/router"
+      },
+      {
+        "importer": "src/app/app.routes.server.ts",
+        "raw_import": "@angular/ssr"
+      },
+      {
+        "importer": "src/app/app.routes.ts",
+        "raw_import": "@angular/router"
+      },
+      {
+        "importer": "src/app/app.spec.ts",
+        "raw_import": "@angular/core/testing"
+      },
+      {
+        "importer": "src/app/app.ts",
+        "raw_import": "@angular/core"
+      },
+      {
+        "importer": "src/app/app.ts",
+        "raw_import": "@angular/common"
+      },
+      {
+        "importer": "src/app/app.ts",
+        "raw_import": "@angular/forms"
+      },
+      {
+        "importer": "src/app/app.ts",
+        "raw_import": "@angular/material/icon"
+      }
+    ],
+    "boundaries": {
+      "src": {
+        "barrel": null,
+        "files": [
+          "src/main.server.ts",
+          "src/main.ts",
+          "src/server.ts"
+        ]
+      },
+      "src/app": {
+        "barrel": null,
+        "files": [
+          "src/app/app.config.server.ts",
+          "src/app/app.config.ts",
+          "src/app/app.routes.server.ts",
+          "src/app/app.routes.ts",
+          "src/app/app.spec.ts",
+          "src/app/app.ts"
+        ]
+      },
+      "src/models": {
+        "barrel": null,
+        "files": [
+          "src/models/admin.model.ts",
+          "src/models/user.model.ts"
+        ]
+      },
+      "src/services": {
+        "barrel": null,
+        "files": [
+          "src/services/cache.service.ts",
+          "src/services/data.processor.ts",
+          "src/services/user.service.ts"
+        ]
+      },
+      "src/utils": {
+        "barrel": null,
+        "files": [
+          "src/utils/a.ts",
+          "src/utils/b.ts",
+          "src/utils/c.ts",
+          "src/utils/d.ts"
+        ]
+      }
+    },
+    "file_to_boundary": {
+      "src/main.server.ts": "src",
+      "src/main.ts": "src",
+      "src/server.ts": "src",
+      "src/app/app.config.server.ts": "src/app",
+      "src/app/app.config.ts": "src/app",
+      "src/app/app.routes.server.ts": "src/app",
+      "src/app/app.routes.ts": "src/app",
+      "src/app/app.spec.ts": "src/app",
+      "src/app/app.ts": "src/app",
+      "src/models/admin.model.ts": "src/models",
+      "src/models/user.model.ts": "src/models",
+      "src/services/cache.service.ts": "src/services",
+      "src/services/data.processor.ts": "src/services",
+      "src/services/user.service.ts": "src/services",
+      "src/utils/a.ts": "src/utils",
+      "src/utils/b.ts": "src/utils",
+      "src/utils/c.ts": "src/utils",
+      "src/utils/d.ts": "src/utils"
+    },
+    "type_shapes": {
+      "src/app/app.ts": {
+        "TopologyNode": [
+          "id",
+          "label",
+          "path",
+          "type"
+        ],
+        "TopologyEdge": [
+          "source",
+          "target"
+        ],
+        "Topology": [
+          "edges",
+          "nodes",
+          "save_error"
+        ],
+        "ImpactResult": [
+          "circular_references",
+          "downstream",
+          "target",
+          "upstream"
+        ],
+        "PythonInfo": [
+          "error",
+          "runtime",
+          "script",
+          "status",
+          "supported",
+          "version"
+        ]
+      },
+      "src/models/admin.model.ts": {
+        "AdminModel": [
+          "createdAt",
+          "id",
+          "name"
+        ]
+      },
+      "src/models/user.model.ts": {
+        "UserModel": [
+          "createdAt",
+          "id",
+          "name"
+        ]
+      }
+    },
+    "summary": {
+      "total_files": 18,
+      "total_edges": 12,
+      "total_boundaries": 5,
+      "total_type_shapes": 7,
+      "total_unresolved": 0,
+      "total_external": 19,
+      "entrypoint_count": 3,
+      "test_file_count": 1
+    }
+  },
+  "analyzers": {
+    "results": {
+      "topo.orphan": {
+        "analyzer": "topo.orphan",
+        "findings": [
+          {
+            "type": "unreferenced_file",
+            "severity": "low",
+            "file": "src/models/admin.model.ts",
+            "node_type": "Other",
+            "observation": "File 'src/models/admin.model.ts' has fan_in=0 and is not an entrypoint or test file. Potentially unreferenced."
+          },
+          {
+            "type": "unreferenced_file",
+            "severity": "low",
+            "file": "src/models/user.model.ts",
+            "node_type": "Other",
+            "observation": "File 'src/models/user.model.ts' has fan_in=0 and is not an entrypoint or test file. Potentially unreferenced."
+          },
+          {
+            "type": "unreferenced_file",
+            "severity": "low",
+            "file": "src/services/cache.service.ts",
+            "node_type": "Service",
+            "observation": "File 'src/services/cache.service.ts' has fan_in=0 and is not an entrypoint or test file. Potentially unreferenced."
+          },
+          {
+            "type": "unreferenced_file",
+            "severity": "low",
+            "file": "src/services/data.processor.ts",
+            "node_type": "Other",
+            "observation": "File 'src/services/data.processor.ts' has fan_in=0 and is not an entrypoint or test file. Potentially unreferenced."
+          },
+          {
+            "type": "unreferenced_file",
+            "severity": "low",
+            "file": "src/services/user.service.ts",
+            "node_type": "Service",
+            "observation": "File 'src/services/user.service.ts' has fan_in=0 and is not an entrypoint or test file. Potentially unreferenced."
+          },
+          {
+            "type": "unreferenced_file",
+            "severity": "low",
+            "file": "src/utils/a.ts",
+            "node_type": "Helper",
+            "observation": "File 'src/utils/a.ts' has fan_in=0 and is not an entrypoint or test file. Potentially unreferenced."
+          }
+        ],
+        "summary": {
+          "total_findings": 6
+        }
+      },
+      "topo.entrypoint": {
+        "analyzer": "topo.entrypoint",
+        "findings": [
+          {
+            "type": "entrypoint",
+            "severity": "info",
+            "file": "src/main.server.ts",
+            "entrypoint_kind": "ssr_bootstrap",
+            "confidence": 0.95,
+            "fan_in": 0,
+            "fan_out": 2
+          },
+          {
+            "type": "entrypoint",
+            "severity": "info",
+            "file": "src/main.ts",
+            "entrypoint_kind": "browser_bootstrap",
+            "confidence": 0.95,
+            "fan_in": 0,
+            "fan_out": 2
+          },
+          {
+            "type": "entrypoint",
+            "severity": "info",
+            "file": "src/server.ts",
+            "entrypoint_kind": "server_http",
+            "confidence": 0.9,
+            "fan_in": 0,
+            "fan_out": 0
+          }
+        ],
+        "summary": {
+          "total_entrypoints": 3
+        }
+      }
+    },
+    "errors": {},
+    "analyzers_run": 2,
+    "analyzers_failed": 0
+  },
+  "unified_summary": {
+    "total_files": 18,
+    "total_edges": 12,
+    "total_boundaries": 5,
+    "total_findings": 9,
+    "analyzers_run": 2
+  }
+}

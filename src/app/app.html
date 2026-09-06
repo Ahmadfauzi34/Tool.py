@@ -1,0 +1,642 @@
+<div class="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+  
+  <!-- Top Navigation Header -->
+  <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur sticky top-0 z-30 px-4 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-emerald-500 p-0.5 flex items-center justify-center shadow-lg shadow-indigo-500/10">
+        <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+          <mat-icon class="text-indigo-400 text-xl">hub</mat-icon>
+        </div>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-lg font-semibold tracking-tight text-white">Codebase Topology &amp; Impact Analyzer</h1>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse mr-1.5"></span>
+            Python 3 Runtime Active
+          </span>
+        </div>
+        <p class="text-xs text-slate-400">Powered by <code class="text-indigo-300 font-mono">file_scanner.py</code> &amp; Express AST graph integration</p>
+      </div>
+    </div>
+
+    <!-- Header Quick Actions -->
+    <div class="flex items-center gap-2.5">
+      <button 
+        (click)="triggerReScan()" 
+        [disabled]="scanning()" 
+        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm transition-colors cursor-pointer disabled:opacity-50">
+        <mat-icon [class.animate-spin]="scanning()" class="text-base">sync</mat-icon>
+        <span>{{ scanning() ? 'Scanning Codebase...' : 'Run Python Scan' }}</span>
+      </button>
+
+      <a 
+        href="/api/topology" 
+        target="_blank"
+        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">
+        <mat-icon class="text-base">download</mat-icon>
+        <span>Download topology.json</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Notification Toast -->
+  @if (copiedMessage()) {
+    <div class="fixed bottom-5 right-5 z-50 bg-slate-800 text-emerald-400 border border-emerald-500/30 px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 text-xs font-medium animate-bounce">
+      <mat-icon class="text-base text-emerald-400">check_circle</mat-icon>
+      <span>{{ copiedMessage() }}</span>
+    </div>
+  }
+
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-8 space-y-6">
+
+    <!-- Metrics Cards Banner -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5 flex flex-col justify-between">
+        <span class="text-xs text-slate-400 font-medium">Total Files / Nodes</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span class="text-2xl font-bold text-white tracking-tight">{{ nodeStats().total }}</span>
+          <mat-icon class="text-slate-500 text-lg">insert_drive_file</mat-icon>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5 flex flex-col justify-between">
+        <span class="text-xs text-emerald-400 font-medium">Services</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span class="text-2xl font-bold text-emerald-400 tracking-tight">{{ nodeStats().services }}</span>
+          <mat-icon class="text-emerald-500/60 text-lg">settings_suggest</mat-icon>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5 flex flex-col justify-between">
+        <span class="text-xs text-sky-400 font-medium">Components</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span class="text-2xl font-bold text-sky-400 tracking-tight">{{ nodeStats().components }}</span>
+          <mat-icon class="text-sky-500/60 text-lg">widgets</mat-icon>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5 flex flex-col justify-between">
+        <span class="text-xs text-purple-400 font-medium">Modules / Routes</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span class="text-2xl font-bold text-purple-400 tracking-tight">{{ nodeStats().modules }}</span>
+          <mat-icon class="text-purple-500/60 text-lg">alt_route</mat-icon>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5 flex flex-col justify-between">
+        <span class="text-xs text-amber-400 font-medium">Helpers / Tools</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span class="text-2xl font-bold text-amber-400 tracking-tight">{{ nodeStats().helpers }}</span>
+          <mat-icon class="text-amber-500/60 text-lg">build</mat-icon>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-xl p-3.5 flex flex-col justify-between">
+        <span class="text-xs text-indigo-400 font-medium">Import Edges</span>
+        <div class="flex items-baseline justify-between mt-2">
+          <span class="text-2xl font-bold text-indigo-400 tracking-tight">{{ nodeStats().edges }}</span>
+          <mat-icon class="text-indigo-500/60 text-lg">account_tree</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs Bar -->
+    <div class="border-b border-slate-800 flex items-center gap-2 overflow-x-auto pb-1">
+      <button 
+        (click)="setTab('topology')"
+        [class.border-indigo-500]="activeTab() === 'topology'"
+        [class.text-indigo-400]="activeTab() === 'topology'"
+        [class.border-transparent]="activeTab() !== 'topology'"
+        [class.text-slate-400]="activeTab() !== 'topology'"
+        class="inline-flex items-center gap-2 px-4 py-2.5 border-b-2 text-sm font-medium transition-colors hover:text-white cursor-pointer whitespace-nowrap">
+        <mat-icon class="text-lg">hub</mat-icon>
+        <span>Codebase Topology Graph</span>
+      </button>
+
+      <button 
+        (click)="setTab('impact')"
+        [class.border-indigo-500]="activeTab() === 'impact'"
+        [class.text-indigo-400]="activeTab() === 'impact'"
+        [class.border-transparent]="activeTab() !== 'impact'"
+        [class.text-slate-400]="activeTab() !== 'impact'"
+        class="inline-flex items-center gap-2 px-4 py-2.5 border-b-2 text-sm font-medium transition-colors hover:text-white cursor-pointer whitespace-nowrap">
+        <mat-icon class="text-lg">security</mat-icon>
+        <span>Impact Guard Analysis</span>
+      </button>
+
+      <button 
+        (click)="setTab('python')"
+        [class.border-indigo-500]="activeTab() === 'python'"
+        [class.text-indigo-400]="activeTab() === 'python'"
+        [class.border-transparent]="activeTab() !== 'python'"
+        [class.text-slate-400]="activeTab() !== 'python'"
+        class="inline-flex items-center gap-2 px-4 py-2.5 border-b-2 text-sm font-medium transition-colors hover:text-white cursor-pointer whitespace-nowrap">
+        <mat-icon class="text-lg">code</mat-icon>
+        <span>Python Library (file_scanner.py)</span>
+      </button>
+
+      <button 
+        (click)="setTab('protocol')"
+        [class.border-indigo-500]="activeTab() === 'protocol'"
+        [class.text-indigo-400]="activeTab() === 'protocol'"
+        [class.border-transparent]="activeTab() !== 'protocol'"
+        [class.text-slate-400]="activeTab() !== 'protocol'"
+        class="inline-flex items-center gap-2 px-4 py-2.5 border-b-2 text-sm font-medium transition-colors hover:text-white cursor-pointer whitespace-nowrap">
+        <mat-icon class="text-lg">description</mat-icon>
+        <span>Surgical Protocol</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: TOPOLOGY GRAPH & EXPLORER -->
+    @if (activeTab() === 'topology') {
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Left 2 Cols: Node Explorer & Filters -->
+        <div class="lg:col-span-2 space-y-4">
+          
+          <!-- Search & Filter Controls -->
+          <div class="bg-slate-800/40 border border-slate-700/60 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3">
+            <div class="relative flex-1 min-w-[200px]">
+              <mat-icon class="absolute left-3 top-2.5 text-slate-400 text-lg">search</mat-icon>
+              <input 
+                type="text"
+                [value]="searchQuery()"
+                (input)="updateSearch($event)"
+                placeholder="Search file path, class label, type..."
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+              />
+            </div>
+
+            <!-- Type Filter Buttons -->
+            <div class="flex items-center gap-1.5 overflow-x-auto py-1">
+              <button 
+                (click)="setFilter('ALL')"
+                [class.bg-indigo-600]="filterType() === 'ALL'"
+                [class.text-white]="filterType() === 'ALL'"
+                [class.bg-slate-800]="filterType() !== 'ALL'"
+                [class.text-slate-400]="filterType() !== 'ALL'"
+                class="px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer">
+                All
+              </button>
+              <button 
+                (click)="setFilter('Service')"
+                [class.bg-emerald-600]="filterType() === 'Service'"
+                [class.text-white]="filterType() === 'Service'"
+                [class.bg-slate-800]="filterType() !== 'Service'"
+                [class.text-slate-400]="filterType() !== 'Service'"
+                class="px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer">
+                Services
+              </button>
+              <button 
+                (click)="setFilter('Component')"
+                [class.bg-sky-600]="filterType() === 'Component'"
+                [class.text-white]="filterType() === 'Component'"
+                [class.bg-slate-800]="filterType() !== 'Component'"
+                [class.text-slate-400]="filterType() !== 'Component'"
+                class="px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer">
+                Components
+              </button>
+              <button 
+                (click)="setFilter('Module')"
+                [class.bg-purple-600]="filterType() === 'Module'"
+                [class.text-white]="filterType() === 'Module'"
+                [class.bg-slate-800]="filterType() !== 'Module'"
+                [class.text-slate-400]="filterType() !== 'Module'"
+                class="px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer">
+                Modules
+              </button>
+              <button 
+                (click)="setFilter('Helper')"
+                [class.bg-amber-600]="filterType() === 'Helper'"
+                [class.text-white]="filterType() === 'Helper'"
+                [class.bg-slate-800]="filterType() !== 'Helper'"
+                [class.text-slate-400]="filterType() !== 'Helper'"
+                class="px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer">
+                Helpers
+              </button>
+            </div>
+          </div>
+
+          <!-- Nodes List -->
+          @if (loading()) {
+            <div class="bg-slate-800/20 border border-slate-700/50 rounded-xl p-12 text-center text-slate-400">
+              <mat-icon class="text-3xl animate-spin text-indigo-400 mb-2">sync</mat-icon>
+              <p class="text-xs">Scanning workspace topology via Python...</p>
+            </div>
+          } @else if (filteredNodes().length === 0) {
+            <div class="bg-slate-800/20 border border-slate-700/50 rounded-xl p-12 text-center text-slate-400">
+              <mat-icon class="text-3xl text-slate-600 mb-2">find_in_page</mat-icon>
+              <p class="text-xs">No files matching filter criteria.</p>
+            </div>
+          } @else {
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              @for (node of filteredNodes(); track node.id) {
+                <div 
+                  (click)="selectNode(node)"
+                  (keyup.enter)="selectNode(node)"
+                  tabindex="0"
+                  [class.border-indigo-500]="selectedNode()?.id === node.id"
+                  [class.bg-indigo-950]="selectedNode()?.id === node.id"
+                  [class.bg-slate-800]="selectedNode()?.id !== node.id"
+                  class="border border-slate-700 hover:border-slate-600 rounded-xl p-3.5 transition-all cursor-pointer group flex flex-col justify-between">
+                  <div>
+                    <div class="flex items-center justify-between gap-2 mb-1.5">
+                      <span class="font-mono text-xs font-bold text-white group-hover:text-indigo-300 transition-colors">
+                        {{ node.label }}
+                      </span>
+                      <span class="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full" [class]="getNodeBadge(node.type)">
+                        {{ node.type }}
+                      </span>
+                    </div>
+                    <p class="text-[11px] font-mono text-slate-400 truncate">{{ node.path }}</p>
+                  </div>
+
+                  <div class="mt-3 pt-2 border-t border-slate-700/40 flex items-center justify-between text-[11px] text-slate-400">
+                    <span class="inline-flex items-center gap-1">
+                      <mat-icon class="text-xs text-indigo-400">call_made</mat-icon>
+                      Imports: {{ getNodeImports(node.path).length }}
+                    </span>
+                    <span class="inline-flex items-center gap-1">
+                      <mat-icon class="text-xs text-emerald-400">call_received</mat-icon>
+                      Used by: {{ getNodeImportedBy(node.path).length }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Right 1 Col: Node Inspector Panel -->
+        <div class="space-y-4">
+          @if (selectedNode()) {
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 space-y-4 sticky top-20">
+              <div class="flex items-start justify-between gap-2 border-b border-slate-700/60 pb-3">
+                <div>
+                  <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full" [class]="getNodeBadge(selectedNode()!.type)">
+                    {{ selectedNode()!.type }}
+                  </span>
+                  <h3 class="text-base font-bold text-white mt-1 font-mono">{{ selectedNode()!.label }}</h3>
+                  <p class="text-xs text-slate-400 font-mono mt-0.5 break-all">{{ selectedNode()!.path }}</p>
+                </div>
+                <button 
+                  (click)="setTab('impact')"
+                  class="p-2 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 transition-colors text-xs font-medium flex items-center gap-1 cursor-pointer">
+                  <mat-icon class="text-sm">security</mat-icon>
+                  <span>Impact</span>
+                </button>
+              </div>
+
+              <!-- Imports Section -->
+              <div>
+                <h4 class="text-xs font-semibold text-slate-300 flex items-center gap-1.5 mb-2">
+                  <mat-icon class="text-indigo-400 text-sm">call_made</mat-icon>
+                  <span>Direct Imports ({{ getNodeImports(selectedNode()!.path).length }})</span>
+                </h4>
+                @if (getNodeImports(selectedNode()!.path).length === 0) {
+                  <p class="text-xs text-slate-500 italic">No relative workspace imports.</p>
+                } @else {
+                  <ul class="space-y-1">
+                    @for (imp of getNodeImports(selectedNode()!.path); track imp) {
+                      <li class="bg-slate-900/60 border border-slate-700/40 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-300 truncate flex items-center justify-between">
+                        <span class="truncate">{{ imp }}</span>
+                        <mat-icon class="text-slate-500 text-xs">chevron_right</mat-icon>
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
+
+              <!-- Consumers Section -->
+              <div>
+                <h4 class="text-xs font-semibold text-slate-300 flex items-center gap-1.5 mb-2">
+                  <mat-icon class="text-emerald-400 text-sm">call_received</mat-icon>
+                  <span>Imported By ({{ getNodeImportedBy(selectedNode()!.path).length }})</span>
+                </h4>
+                @if (getNodeImportedBy(selectedNode()!.path).length === 0) {
+                  <p class="text-xs text-slate-500 italic">Entry point or leaf file (not imported by other workspace files).</p>
+                } @else {
+                  <ul class="space-y-1">
+                    @for (src of getNodeImportedBy(selectedNode()!.path); track src) {
+                      <li class="bg-slate-900/60 border border-slate-700/40 rounded-lg px-2.5 py-1.5 text-xs font-mono text-slate-300 truncate flex items-center justify-between">
+                        <span class="truncate">{{ src }}</span>
+                        <mat-icon class="text-emerald-500 text-xs">arrow_back</mat-icon>
+                      </li>
+                    }
+                  </ul>
+                }
+              </div>
+
+              <!-- Action button -->
+              <button 
+                (click)="copyToClipboard(selectedNode()!.path, 'File path')"
+                class="w-full py-2 bg-slate-900 hover:bg-slate-750 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium flex items-center justify-center gap-1.5 transition-colors cursor-pointer">
+                <mat-icon class="text-sm">content_copy</mat-icon>
+                <span>Copy File Path</span>
+              </button>
+            </div>
+          } @else {
+            <div class="bg-slate-800/30 border border-slate-700/50 rounded-xl p-8 text-center text-slate-400">
+              <mat-icon class="text-2xl text-slate-600 mb-1">touch_app</mat-icon>
+              <p class="text-xs">Click any node card on the left to inspect detailed dependencies.</p>
+            </div>
+          }
+        </div>
+
+      </div>
+    }
+
+    <!-- TAB 2: SURGICAL IMPACT GUARD ANALYSIS -->
+    @if (activeTab() === 'impact') {
+      <div class="space-y-6">
+        
+        <!-- Target File Selector Card -->
+        <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                <mat-icon class="text-indigo-400 text-base">shield</mat-icon>
+                <span>Surgical Impact Analysis (Transitive Downstream &amp; Upstream)</span>
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">Select a file to calculate full regression impact before making edits.</p>
+            </div>
+            
+            <button 
+              (click)="analyzeImpact(selectedFile())"
+              [disabled]="impactLoading()"
+              class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-medium flex items-center gap-1 transition-colors cursor-pointer disabled:opacity-50">
+              <mat-icon [class.animate-spin]="impactLoading()" class="text-sm">refresh</mat-icon>
+              <span>Recalculate Impact</span>
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div>
+              <label for="targetFileSelect" class="block text-xs font-medium text-slate-300 mb-1">Target File to Analyze:</label>
+              <select 
+                id="targetFileSelect"
+                [value]="selectedFile()"
+                (change)="onFileSelectChange($event)"
+                class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-xs font-mono text-slate-200 focus:outline-none focus:border-indigo-500">
+                @for (node of topology()?.nodes || []; track node.id) {
+                  <option [value]="node.path">{{ node.path }} ({{ node.label }})</option>
+                }
+              </select>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-700/50 rounded-lg p-3 flex items-center justify-between">
+              <div>
+                <span class="text-[11px] text-slate-400 block">Risk / Regression Level</span>
+                @if ((impactResult()?.downstream?.length || 0) >= 3) {
+                  <span class="text-xs font-bold text-red-400 flex items-center gap-1 mt-0.5">
+                    <mat-icon class="text-sm">warning</mat-icon>
+                    HIGH RISK ({{ impactResult()?.downstream?.length }} downstream files affected)
+                  </span>
+                } @else if ((impactResult()?.downstream?.length || 0) > 0) {
+                  <span class="text-xs font-bold text-amber-400 flex items-center gap-1 mt-0.5">
+                    <mat-icon class="text-sm">info</mat-icon>
+                    MODERATE RISK ({{ impactResult()?.downstream?.length }} downstream files)
+                  </span>
+                } @else {
+                  <span class="text-xs font-bold text-emerald-400 flex items-center gap-1 mt-0.5">
+                    <mat-icon class="text-sm">check_circle</mat-icon>
+                    SAFE / ISOLATED (0 downstream consumers)
+                  </span>
+                }
+              </div>
+
+              <div class="text-right">
+                <span class="text-[10px] text-slate-500 block">CLI Command:</span>
+                <code class="text-[11px] text-indigo-300 font-mono">python3 file_scanner.py impact {{ selectedFile() }}</code>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Impact Results Grid -->
+        @if (impactLoading()) {
+          <div class="bg-slate-800/20 border border-slate-700/50 rounded-xl p-12 text-center text-slate-400">
+            <mat-icon class="text-3xl animate-spin text-indigo-400 mb-2">sync</mat-icon>
+            <p class="text-xs">Computing transitive DFS impact graph via Python...</p>
+          </div>
+        } @else if (impactResult()) {
+          
+          <!-- Circular References Warning -->
+          @if (impactResult()!.circular_references.length > 0) {
+            <div class="bg-red-950/40 border border-red-500/40 rounded-xl p-4 flex items-start gap-3">
+              <mat-icon class="text-red-400 text-xl mt-0.5">warning_amber</mat-icon>
+              <div>
+                <h4 class="text-xs font-bold text-red-300 uppercase tracking-wide">Circular References Detected!</h4>
+                <p class="text-xs text-red-200/80 mt-0.5">The target file belongs to a dependency cycle. Take caution when editing to avoid runtime initialization errors.</p>
+                <div class="mt-2 flex flex-wrap gap-1.5">
+                  @for (cycleNode of impactResult()!.circular_references; track cycleNode) {
+                    <span class="bg-red-900/60 border border-red-500/30 text-red-200 font-mono text-[11px] px-2 py-0.5 rounded">
+                      {{ cycleNode }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Downstream Consumers Card -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-700/60 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                    <mat-icon class="text-base">alt_route</mat-icon>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">Downstream Impact (Consumers)</h4>
+                    <p class="text-[11px] text-slate-400">Files that import this target (directly or transitively)</p>
+                  </div>
+                </div>
+                <span class="bg-amber-500/10 text-amber-400 font-mono text-xs font-bold px-2 py-0.5 rounded-full border border-amber-500/30">
+                  {{ impactResult()!.downstream.length }}
+                </span>
+              </div>
+
+              @if (impactResult()!.downstream.length === 0) {
+                <p class="text-xs text-slate-500 italic py-4 text-center">No downstream files depend on this component/file.</p>
+              } @else {
+                <ul class="space-y-1.5 max-h-[350px] overflow-y-auto pr-1">
+                  @for (file of impactResult()!.downstream; track file) {
+                    <li class="bg-slate-900/80 border border-slate-700/50 hover:border-slate-600 rounded-lg p-2.5 flex items-center justify-between text-xs font-mono transition-colors">
+                      <span class="text-slate-200 truncate">{{ file }}</span>
+                      <span class="text-[10px] text-amber-400 bg-amber-950/50 border border-amber-800 px-1.5 py-0.5 rounded">
+                        Downstream
+                      </span>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+
+            <!-- Upstream Dependencies Card -->
+            <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-slate-700/60 pb-2.5">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
+                    <mat-icon class="text-base">north_west</mat-icon>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-white uppercase tracking-wider">Upstream Dependencies</h4>
+                    <p class="text-[11px] text-slate-400">Files imported by target (directly or transitively)</p>
+                  </div>
+                </div>
+                <span class="bg-indigo-500/10 text-indigo-400 font-mono text-xs font-bold px-2 py-0.5 rounded-full border border-indigo-500/30">
+                  {{ impactResult()!.upstream.length }}
+                </span>
+              </div>
+
+              @if (impactResult()!.upstream.length === 0) {
+                <p class="text-xs text-slate-500 italic py-4 text-center">No relative imports inside this file.</p>
+              } @else {
+                <ul class="space-y-1.5 max-h-[350px] overflow-y-auto pr-1">
+                  @for (file of impactResult()!.upstream; track file) {
+                    <li class="bg-slate-900/80 border border-slate-700/50 hover:border-slate-600 rounded-lg p-2.5 flex items-center justify-between text-xs font-mono transition-colors">
+                      <span class="text-slate-200 truncate">{{ file }}</span>
+                      <span class="text-[10px] text-indigo-400 bg-indigo-950/50 border border-indigo-800 px-1.5 py-0.5 rounded">
+                        Upstream
+                      </span>
+                    </li>
+                  }
+                </ul>
+              }
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+    <!-- TAB 3: PYTHON LIBRARY VIEW -->
+    @if (activeTab() === 'python') {
+      <div class="space-y-6">
+        
+        <!-- Python Banner -->
+        <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-5 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30">
+              <mat-icon class="text-2xl">terminal</mat-icon>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white font-mono">file_scanner.py</h3>
+              <p class="text-xs text-slate-400 mt-0.5">Surgical Python scanner library for AST parsing, topology JSON generation, and impact calculation.</p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button 
+              (click)="copyToClipboard('python3 file_scanner.py public/topology.json', 'Scan command')"
+              class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-mono transition-colors flex items-center gap-1 cursor-pointer">
+              <mat-icon class="text-sm">content_copy</mat-icon>
+              <span>Copy Scan Command</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CLI Command Examples Card -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-indigo-400 font-mono">1. Generate topology.json</span>
+              <button (click)="copyToClipboard('python3 file_scanner.py public/topology.json', 'Python command')" class="text-slate-400 hover:text-white cursor-pointer">
+                <mat-icon class="text-sm">content_copy</mat-icon>
+              </button>
+            </div>
+            <pre class="text-[11px] font-mono text-slate-300 bg-slate-900 p-2.5 rounded-lg overflow-x-auto">python3 file_scanner.py public/topology.json</pre>
+          </div>
+
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-emerald-400 font-mono">2. Calculate File Impact</span>
+              <button (click)="copyToClipboard('python3 file_scanner.py impact src/app/app.ts', 'Impact command')" class="text-slate-400 hover:text-white cursor-pointer">
+                <mat-icon class="text-sm">content_copy</mat-icon>
+              </button>
+            </div>
+            <pre class="text-[11px] font-mono text-slate-300 bg-slate-900 p-2.5 rounded-lg overflow-x-auto">python3 file_scanner.py impact src/app/app.ts</pre>
+          </div>
+        </div>
+
+        <!-- Python Source View -->
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <span class="text-xs font-bold text-slate-300 font-mono flex items-center gap-2">
+              <mat-icon class="text-amber-400 text-sm">code</mat-icon>
+              file_scanner.py (Python Source Code)
+            </span>
+            <span class="text-[11px] text-slate-500">Workspace Root Path: /file_scanner.py</span>
+          </div>
+
+          <pre class="text-xs font-mono text-slate-300 overflow-x-auto p-4 bg-slate-900/60 rounded-lg max-h-[500px] leading-relaxed">
+# file_scanner.py
+import os, re, json
+
+def scan_directory(path='.', max_depth=2):
+    # Surgical directory metadata scanner
+    structure = []
+    base_depth = path.count(os.sep)
+    for root, dirs, files in os.walk(path):
+        curr_depth = root.count(os.sep)
+        if curr_depth - base_depth &lt;= max_depth:
+            structure.append(dict(path=root, dirs=len(dirs), files=len(files)))
+    return structure
+
+def scan_topology(path='.', save_path=None, ignore_dirs=None):
+    # Scans TS/JS/TSX/JSX files for AST imports &amp; generates graph nodes &amp; edges
+    pass
+
+def get_impacted_files(file_path, topology=None, path='.'):
+    # Calculates transitive upstream/downstream impact &amp; circular references
+    pass
+          </pre>
+        </div>
+
+      </div>
+    }
+
+    <!-- TAB 4: SURGICAL PROTOCOL GUIDANCE -->
+    @if (activeTab() === 'protocol') {
+      <div class="bg-slate-800/50 border border-slate-700/60 rounded-xl p-6 space-y-6">
+        <div>
+          <h3 class="text-base font-bold text-white flex items-center gap-2">
+            <mat-icon class="text-indigo-400">gavel</mat-icon>
+            <span>PROTOKOL PENGGUNAAN FILE SCANNER &amp; TOPOLOGY TOOL</span>
+          </h3>
+          <p class="text-xs text-slate-400 mt-1">Panduan praktis hemat token &amp; pengawasan dampak perubahan untuk AI Studio Developer &amp; Assistant.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-slate-900 border border-slate-700/50 rounded-xl p-4 space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold text-xs">1</div>
+            <h4 class="text-xs font-bold text-white">Fase Observasi Awal (Surgical Scan)</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Saat menerima request perubahan pada modul, jalankan <code class="text-indigo-300">scan_topology</code> untuk mendapatkan visual lengkap arsitektur tanpa membaca seluruh file.
+            </p>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-700/50 rounded-xl p-4 space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-xs">2</div>
+            <h4 class="text-xs font-bold text-white">Fase Analisis Dampak (Impact Guard)</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Sebelum memodifikasi file target, jalankan <code class="text-emerald-300">get_impacted_files</code> untuk menginspeksi file <strong>downstream</strong> agar mencegah broken imports atau regresi API.
+            </p>
+          </div>
+
+          <div class="bg-slate-900 border border-slate-700/50 rounded-xl p-4 space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-xs">3</div>
+            <h4 class="text-xs font-bold text-white">Deteksi Circular Reference</h4>
+            <p class="text-xs text-slate-400 leading-relaxed">
+              Periksa field <code class="text-amber-300">circular_references</code>. Jika ditemukan siklus ketergantungan, rancang refactoring yang mengarahkan ketergantungan menjadi Directed Acyclic Graph (DAG).
+            </p>
+          </div>
+        </div>
+      </div>
+    }
+
+  </main>
+</div>
