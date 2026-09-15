@@ -5,22 +5,156 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
-import {join} from 'node:path';
+import {basename, isAbsolute, join, relative, resolve, sep} from 'node:path';
 import {execFile} from 'node:child_process';
 import {promisify} from 'node:util';
-import {readFile, access} from 'node:fs/promises';
+import {access} from 'node:fs/promises';
 
 const execFilePromise = promisify(execFile);
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
-async function getScannerScript(cwd: string): Promise<string> {
-  const toolScript = join(cwd, 'tools/ai_studio_tool/file_scanner.py');
-  try {
-    await access(toolScript);
-    return 'tools/ai_studio_tool/file_scanner.py';
-  } catch {
-    return 'tools/ai_studio_tool/file_scanner.py';
+interface KernelGraph {
+  shared_graph?: {
+    vertices?: string[];
+    edges?: [string, string][];
+  };
+}
+
+interface KernelImpact {
+  target?: string;
+  upstream?: string[];
+  downstream?: string[];
+  circular_references?: string[];
+  [key: string]: unknown;
+}
+
+class InvalidCorpusTargetError extends Error {}
+
+function getCorpusRoot(): string {
+  return resolve(process.env['AI_STUDIO_CORPUS_ROOT'] || process.cwd());
+}
+
+async function getKernelScript(cwd: string): Promise<string> {
+  const configuredDirectory = process.env['AI_STUDIO_TOOL_DIR'];
+  const candidates = [
+    configuredDirectory
+      ? join(resolve(cwd, configuredDirectory), 'hott_kernel.py')
+      : undefined,
+    join(cwd, 'tools/ai_studio_tool/hott_kernel.py'),
+  ].filter((candidate): candidate is string => Boolean(candidate));
+
+  for (const candidate of candidates) {
+    try {
+      await access(candidate);
+      return candidate;
+    } catch {
+      // Continue to the next explicit candidate.
+    }
   }
+
+  throw new Error(
+    `hott_kernel.py not found; set AI_STUDIO_TOOL_DIR to the external ai_studio_tool directory (checked: ${candidates.join(', ')})`,
+  );
+}
+
+function resolveCorpusTarget(corpusRoot: string, requestedTarget: string): string {
+  const target = resolve(corpusRoot, requestedTarget);
+  const relativeTarget = relative(corpusRoot, target);
+  if (
+    relativeTarget === '..' ||
+    relativeTarget.startsWith(`..${sep}`) ||
+    isAbsolute(relativeTarget)
+  ) {
+    throw new InvalidCorpusTargetError(
+      `Target must stay inside the configured corpus root: ${requestedTarget}`,
+    );
+  }
+  return target;
+}
+
+function corpusPath(corpusRoot: string, filePath: string): string {
+  const path = relative(corpusRoot, filePath);
+  return (path || '.').split(sep).join('/');
+}
+
+function classifyNode(path: string): 'Service' | 'Component' | 'Module' | 'Helper' | 'Other' {
+  if (/service\.ts$/i.test(path)) return 'Service';
+  if (/(component\.ts|(^|\/)app\.ts)$/i.test(path)) return 'Component';
+  if (/(module|routes?|config)(\.|\/)/i.test(path)) return 'Module';
+  if (/(^|\/)(utils?|helpers?)(\/|$)/i.test(path)) return 'Helper';
+  return 'Other';
+}
+
+async function runKernel<T>(cwd: string, args: string[]): Promise<T> {
+  const script = await getKernelScript(cwd);
+  const {stdout} = await execFilePromise('python3', [script, ...args], {
+    cwd,
+    encoding: 'utf8',
+    maxBuffer: 16 * 1024 * 1024,
+  });
+  return JSON.parse(stdout) as T;
+}
+
+function topologyResponse(corpusRoot: string, kernel: KernelGraph) {
+  const vertices = kernel.shared_graph?.vertices || [];
+  const edges = kernel.shared_graph?.edges || [];
+  return {
+    nodes: vertices.map((vertex) => {
+      const path = corpusPath(corpusRoot, vertex);
+      return {
+        id: path,
+        path,
+        label: basename(path),
+        type: classifyNode(path),
+      };
+    }),
+    edges: edges.map(([source, target]) => ({
+      source: corpusPath(corpusRoot, source),
+      target: corpusPath(corpusRoot, target),
+    })),
+  };
+}
+
+function impactResponse(corpusRoot: string, kernel: KernelImpact) {
+  const mapPaths = (value: unknown): string[] =>
+    Array.isArray(value)
+      ? value.filter((item): item is string => typeof item === 'string').map((item) => corpusPath(corpusRoot, item))
+      : [];
+
+  const response: KernelImpact = {...kernel};
+  const scalarPathKeys = ['target', 'file', 'requested_target'];
+  const arrayPathKeys = [
+    'upstream',
+    'downstream',
+    'direct_upstream',
+    'direct_downstream',
+    'affected_entrypoints',
+    'circular_references',
+    'candidate_targets',
+  ];
+
+  for (const key of scalarPathKeys) {
+    const value = response[key];
+    if (typeof value === 'string' && isAbsolute(value)) {
+      response[key] = corpusPath(corpusRoot, value);
+    }
+  }
+  for (const key of arrayPathKeys) {
+    if (key in response) response[key] = mapPaths(response[key]);
+  }
+
+  return response;
+}
+
+function queryResponse(corpusRoot: string, kernel: Record<string, unknown>) {
+  const response = impactResponse(corpusRoot, kernel as KernelImpact);
+  if (kernel['impact'] && typeof kernel['impact'] === 'object') {
+    response['impact'] = impactResponse(
+      corpusRoot,
+      kernel['impact'] as KernelImpact,
+    );
+  }
+  return response;
 }
 
 const app = express();
@@ -32,7 +166,7 @@ app.use(express.json());
 app.get('/api/python-info', async (req, res) => {
   try {
     const cwd = process.cwd();
-    const script = await getScannerScript(cwd);
+    const script = await getKernelScript(cwd);
     const { stdout: versionOut } = await execFilePromise('python3', ['--version']);
     res.json({
       supported: true,
@@ -53,11 +187,11 @@ app.get('/api/python-info', async (req, res) => {
 app.get('/api/topology', async (req, res) => {
   try {
     const cwd = process.cwd();
-    const script = await getScannerScript(cwd);
-    await execFilePromise('python3', [script, 'public/topology.json'], { cwd });
-    const jsonContent = await readFile(join(cwd, 'public/topology.json'), 'utf-8');
-    res.setHeader('Content-Type', 'application/json');
-    res.send(jsonContent);
+    const corpusRoot = getCorpusRoot();
+    const kernel = await runKernel<KernelGraph>(cwd, [
+      'analyze', corpusRoot, '--cache-mode', 'off', '--output', 'graph',
+    ]);
+    res.json(topologyResponse(corpusRoot, kernel));
   } catch (error: unknown) {
     const err = error as Error;
     res.status(500).json({ error: 'Failed to scan topology', details: err.message || String(err) });
@@ -68,13 +202,16 @@ app.get('/api/impact', async (req, res) => {
   const filePath = (req.query['file'] as string) || 'src/app/app.ts';
   try {
     const cwd = process.cwd();
-    const script = await getScannerScript(cwd);
-    const { stdout } = await execFilePromise('python3', [script, 'impact', filePath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
+    const corpusRoot = getCorpusRoot();
+    const target = resolveCorpusTarget(corpusRoot, filePath);
+    const kernel = await runKernel<KernelImpact>(cwd, [
+      'impact', target, corpusRoot, '--cache-mode', 'off', '--output', 'full',
+    ]);
+    res.json(impactResponse(corpusRoot, kernel));
   } catch (error: unknown) {
     const err = error as Error;
-    res.status(500).json({ error: 'Failed to calculate impact', details: err.message || String(err) });
+    const status = err instanceof InvalidCorpusTargetError ? 400 : 500;
+    res.status(status).json({ error: 'Failed to calculate impact', details: err.message || String(err) });
   }
 });
 
@@ -86,223 +223,59 @@ app.get('/api/outline', async (req, res) => {
   }
   try {
     const cwd = process.cwd();
-    const script = await getScannerScript(cwd);
-    const { stdout } = await execFilePromise('python3', [script, 'outline', filePath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
+    const corpusRoot = getCorpusRoot();
+    const target = resolveCorpusTarget(corpusRoot, filePath);
+    const kernel = await runKernel<Record<string, unknown>>(cwd, [
+      'outline', target, corpusRoot, '--cache-mode', 'off', '--output', 'full',
+    ]);
+    res.json(queryResponse(corpusRoot, kernel));
   } catch (error: unknown) {
     const err = error as Error;
-    res.status(500).json({ error: 'Failed to extract outline', details: err.message || String(err) });
+    const status = err instanceof InvalidCorpusTargetError ? 400 : 500;
+    res.status(status).json({ error: 'Failed to extract outline', details: err.message || String(err) });
   }
 });
 
 app.get('/api/brief', async (req, res) => {
   const filePath = req.query['file'] as string;
-  const rootPath = (req.query['root'] as string) || '.';
   if (!filePath) {
     res.status(400).json({ error: "Parameter 'file' wajib diisi. Contoh: ?file=src/app/app.ts" });
     return;
   }
   try {
     const cwd = process.cwd();
-    const script = await getScannerScript(cwd);
-    const { stdout } = await execFilePromise('python3', [script, 'brief', filePath, rootPath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
+    const corpusRoot = getCorpusRoot();
+    const target = resolveCorpusTarget(corpusRoot, filePath);
+    const kernel = await runKernel<Record<string, unknown>>(cwd, [
+      'brief', target, corpusRoot, '--cache-mode', 'off', '--output', 'full',
+    ]);
+    res.json(queryResponse(corpusRoot, kernel));
   } catch (error: unknown) {
     const err = error as Error;
-    res.status(500).json({ error: 'Failed to generate file brief', details: err.message || String(err) });
+    const status = err instanceof InvalidCorpusTargetError ? 400 : 500;
+    res.status(status).json({ error: 'Failed to generate file brief', details: err.message || String(err) });
   }
 });
 
-app.get('/api/async-detector', async (req, res) => {
-  const filePath = req.query['file'] as string;
-  const mode = (req.query['mode'] as string) || 'file';
-  try {
-    const cwd = process.cwd();
-    const detectorScript = join(cwd, 'tools/ai_studio_tool/async_waterfall_detector.py');
-    let args: string[];
-    if (mode === 'scan') {
-      args = [detectorScript, 'scan', filePath || '.'];
-    } else {
-      args = [detectorScript, filePath || 'src/app/app.ts'];
-    }
-    const { stdout } = await execFilePromise('python3', args, { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to analyze async issues', details: err.message || String(err) });
-  }
-});
+const retiredEndpoints = [
+  '/api/async-detector',
+  '/api/deopt-checker',
+  '/api/gc-pressure',
+  '/api/cache-auditor',
+  '/api/type-isomorphism',
+  '/api/boundary-sheaf',
+  '/api/homotopy-paths',
+  '/api/topological-integrity',
+  '/api/topological-manifold',
+  '/api/topological-fingerprint',
+  '/api/decoder-steering',
+];
 
-app.get('/api/deopt-checker', async (req, res) => {
-  const filePath = req.query['file'] as string;
-  const mode = (req.query['mode'] as string) || 'file';
-  try {
-    const cwd = process.cwd();
-    const checkerScript = join(cwd, 'tools/ai_studio_tool/deopt_checker.py');
-    let args: string[];
-    if (mode === 'scan') {
-      args = [checkerScript, 'scan', filePath || '.'];
-    } else {
-      args = [checkerScript, filePath || 'src/app/app.ts'];
-    }
-    const { stdout } = await execFilePromise('python3', args, { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to check deopt patterns', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/gc-pressure', async (req, res) => {
-  const filePath = req.query['file'] as string;
-  const mode = (req.query['mode'] as string) || 'file';
-  try {
-    const cwd = process.cwd();
-    const analyzerScript = join(cwd, 'tools/ai_studio_tool/gc_pressure_analyzer.py');
-    let args: string[];
-    if (mode === 'scan') {
-      args = [analyzerScript, 'scan', filePath || '.'];
-    } else {
-      args = [analyzerScript, filePath || 'src/app/app.ts'];
-    }
-    const { stdout } = await execFilePromise('python3', args, { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to analyze GC pressure', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/cache-auditor', async (req, res) => {
-  const filePath = req.query['file'] as string;
-  const mode = (req.query['mode'] as string) || 'file';
-  try {
-    const cwd = process.cwd();
-    const auditorScript = join(cwd, 'tools/ai_studio_tool/cache_auditor.py');
-    let args: string[];
-    if (mode === 'scan') {
-      args = [auditorScript, 'scan', filePath || '.'];
-    } else {
-      args = [auditorScript, filePath || 'src/app/app.ts'];
-    }
-    const { stdout } = await execFilePromise('python3', args, { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to audit cache patterns', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/type-isomorphism', async (req, res) => {
-  const filePath = req.query['file'] as string;
-  const mode = (req.query['mode'] as string) || 'file';
-  try {
-    const cwd = process.cwd();
-    const observerScript = join(cwd, 'tools/ai_studio_tool/type_isomorphism_observer.py');
-    let args: string[];
-    if (mode === 'scan') {
-      args = [observerScript, 'scan', filePath || '.'];
-    } else {
-      args = [observerScript, filePath || 'src/app/app.ts'];
-    }
-    const { stdout } = await execFilePromise('python3', args, { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to observe type isomorphisms', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/boundary-sheaf', async (req, res) => {
-  const rootPath = (req.query['root'] as string) || 'src';
-  try {
-    const cwd = process.cwd();
-    const sheafScript = join(cwd, 'tools/ai_studio_tool/boundary_sheaf_checker.py');
-    const { stdout } = await execFilePromise('python3', [sheafScript, rootPath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to observe boundary sheaf obstructions', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/homotopy-paths', async (req, res) => {
-  const rootPath = (req.query['root'] as string) || 'src';
-  try {
-    const cwd = process.cwd();
-    const scriptPath = join(cwd, 'tools/ai_studio_tool/homotopy_path_observer.py');
-    const { stdout } = await execFilePromise('python3', [scriptPath, rootPath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to observe homotopy paths', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/topological-integrity', async (req, res) => {
-  const rootPath = (req.query['root'] as string) || 'src';
-  try {
-    const cwd = process.cwd();
-    const scriptPath = join(cwd, 'tools/ai_studio_tool/topological_integrity_orchestrator.py');
-    const { stdout } = await execFilePromise('python3', [scriptPath, rootPath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to synthesize topological integrity', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/topological-manifold', async (req, res) => {
-  const rootPath = (req.query['root'] as string) || 'src';
-  try {
-    const cwd = process.cwd();
-    const scriptPath = join(cwd, 'tools/ai_studio_tool/topological_manifold_builder.py');
-    const { stdout } = await execFilePromise('python3', [scriptPath, rootPath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to build topological manifold', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/topological-fingerprint', async (req, res) => {
-  const rootPath = (req.query['root'] as string) || 'src';
-  try {
-    const cwd = process.cwd();
-    const scriptPath = join(cwd, 'tools/ai_studio_tool/invariant_encoder.py');
-    const { stdout } = await execFilePromise('python3', [scriptPath, rootPath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to encode topological invariants', details: err.message || String(err) });
-  }
-});
-
-app.get('/api/decoder-steering', async (req, res) => {
-  const mode = (req.query['mode'] as string) || 'steer';
-  const rootPath = (req.query['root'] as string) || 'src';
-  try {
-    const cwd = process.cwd();
-    const scriptPath = join(cwd, 'tools/ai_studio_tool/decoder_steering.py');
-    const { stdout } = await execFilePromise('python3', [scriptPath, mode, rootPath], { cwd });
-    res.setHeader('Content-Type', 'application/json');
-    res.send(stdout);
-  } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ error: 'Failed to execute decoder steering', details: err.message || String(err) });
-  }
+app.get(retiredEndpoints, (_req, res) => {
+  res.status(410).json({
+    error: 'This legacy standalone analyzer endpoint has been retired.',
+    replacements: ['/api/topology', '/api/impact', '/api/outline', '/api/brief'],
+  });
 });
 
 /**
