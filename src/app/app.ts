@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, computed, signal, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -26,14 +26,17 @@ export interface ImpactResult {
   upstream: string[];
   downstream: string[];
   circular_references: string[];
+  change_risk_level?: string;
+  change_risk_reasons?: string[];
+  target_resolution?: string;
 }
 
 export interface PythonInfo {
   supported: boolean;
-  runtime: string;
-  version: string;
-  script: string;
-  status: string;
+  runtime?: string;
+  version?: string;
+  script?: string;
+  status?: string;
   error?: string;
 }
 
@@ -45,6 +48,8 @@ export interface PythonInfo {
   styleUrl: './app.css',
 })
 export class App implements OnInit {
+  private readonly isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+
   pythonInfo = signal<PythonInfo | null>(null);
   topology = signal<Topology | null>(null);
   loading = signal<boolean>(true);
@@ -99,6 +104,11 @@ export class App implements OnInit {
   });
 
   ngOnInit() {
+    if (!this.isBrowser) {
+      this.loading.set(false);
+      return;
+    }
+
     this.checkPythonInfo();
     this.loadTopology();
   }
@@ -114,7 +124,7 @@ export class App implements OnInit {
         supported: false,
         runtime: 'Python 3',
         version: 'Unknown',
-        script: 'file_scanner.py',
+        script: 'hott_kernel.py',
         status: 'error',
         error: err.message || String(err)
       });
